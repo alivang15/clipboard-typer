@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleDisplayName</key>
+    <string>Clipboard Typer</string>
+    <key>CFBundleIdentifier</key>
+    <string>com.alivang.clipboardtyper</string>
+    <key>CFBundleName</key>
+    <string>Clipboard Typer</string>
+    <key>CFBundleShortVersionString</key>
+    <string>1.0.0</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleInfoDictionaryVersion</key>
+    <string>6.0</string>
+    <key>NSHighResolutionCapable</key>
+    <true/>
+    <key>LSUIElement</key>
+    <true/>
+    <key>NSAccessibilityUsageDescription</key>
+    <string>Clipboard Typer needs accessibility access to listen for keyboard shortcuts and simulate typing.</string>
+</dict>
+</plist>
