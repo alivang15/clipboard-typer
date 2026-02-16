@@ -31,7 +31,7 @@ Runs silently in the background with a **menu bar icon** (macOS) or **system tra
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/yourusername/clipboard-typer.git
+git clone https://github.com/alivang15/clipboard-typer.git
 cd clipboard-typer
 ```
 
@@ -108,7 +108,9 @@ Click the icon to see the menu with status, hotkeys, pause/resume, and quit opti
 
 ## Hotkeys
 
-**Same on both Windows and macOS:**
+Platform-specific hotkeys are used to avoid conflicts with existing system shortcuts.
+
+**macOS:**
 
 | Hotkey | Action |
 |--------|--------|
@@ -117,21 +119,62 @@ Click the icon to see the menu with status, hotkeys, pause/resume, and quit opti
 | **Ctrl+Shift+B** | Pause/Resume the tool |
 | **Ctrl+Shift+Q** | Quit the program |
 
-> **Note for macOS users:** We use Ctrl (not Cmd) for the hotkeys to avoid triggering system clipboard paste.
+**Windows:**
+
+| Hotkey | Action |
+|--------|--------|
+| **Ctrl+Shift+B** | Start typing clipboard contents |
+| **ESC** | Stop typing immediately (emergency stop) |
+| **Ctrl+Shift+H** | Pause/Resume the tool |
+| **Ctrl+Shift+Q** | Quit the program |
+
+> **macOS note:** We use Ctrl (not Cmd) for hotkeys to avoid triggering system clipboard paste.
+> **Windows note:** We use Ctrl+Shift+B for paste instead of Ctrl+Shift+V to avoid conflicts with Windows' native Ctrl+Shift+V (Emoji & Symbols panel).
+
+## Lessons Learned: Why These Hotkeys?
+
+### Why Ctrl+Shift+B (Windows paste)?
+
+Originally, this tool used **Ctrl+Shift+V** on both platforms since that's the standard paste hotkey on Windows. However, when pausing the program (`enabled = False`), the keyboard listener would still capture and block the Ctrl+Shift+V keystroke, preventing Windows from handling its own **Ctrl+Shift+V** function (Emoji & Symbols panel).
+
+**The Problem:**
+- The `pynput` keyboard listener runs continuously, even when the program is paused
+- You can't truly "ignore" a keystroke in `pynput` — once the listener detects it, it's consumed
+- This meant pausing the tool didn't actually let Windows reclaim the hotkey
+
+**The Solution:**
+- Use a **different hotkey per platform** that doesn't conflict with OS shortcuts
+- Windows: `Ctrl+Shift+B` (avoids Windows' native Ctrl+Shift+V)
+- macOS: `Ctrl+Shift+V` (safe — doesn't conflict with system shortcuts)
+
+### Why Ctrl+Shift+H (Windows pause)?
+
+Similar reasoning: **Ctrl+Shift+B** had to be reassigned to the paste function on Windows, so we needed a different hotkey for pause/resume that wouldn't conflict with existing Windows shortcuts. **Ctrl+Shift+H** is unused by Windows, making it a safe choice.
+
+### Key Insight
+
+**Hotkey isolation:** When building tools that intercept keyboard input, always verify that your hotkeys don't conflict with:
+1. **Operating system hotkeys** (Ctrl+Shift+V on Windows, Cmd+Space on macOS, etc.)
+2. **Common application shortcuts** (especially in browsers and IDEs)
+3. **Accessibility features** (screen readers, voice control, etc.)
+
+Using platform-specific hotkeys is safer than trying to "conditionally consume" a keystroke — the listener can't unsee a key press.
 
 ## Workflow
 
 **On Windows:**
 1. **Copy** your text normally with Ctrl+C
 2. **Click** where you want to type in your target application
-3. **Press Ctrl+Shift+V** to start typing
+3. **Press Ctrl+Shift+B** to start typing
 4. **Press ESC** anytime to stop typing (if needed)
+5. **Press Ctrl+Shift+H** to pause/resume the tool
 
 **On macOS:**
 1. **Copy** your text normally with Cmd+C
 2. **Click** where you want to type in your target application
 3. **Press Ctrl+Shift+V** to start typing (note: Ctrl, not Cmd)
 4. **Press ESC** anytime to stop typing (if needed)
+5. **Press Ctrl+Shift+B** to pause/resume the tool
 
 ## Configuration
 
@@ -242,10 +285,6 @@ This bypasses paste restrictions because applications see it as real keyboard in
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
-
-## License
-
-MIT License - see [LICENSE](LICENSE) file for details
 
 ## Disclaimer
 

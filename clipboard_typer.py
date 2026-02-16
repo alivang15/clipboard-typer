@@ -6,10 +6,18 @@ Useful for remote desktops and applications that block clipboard paste.
 
 Runs as a menu bar icon (macOS) or system tray icon (Windows).
 
-Hotkeys (same on both Windows and macOS):
+Hotkeys:
+
+macOS:
   Ctrl+Shift+V  → Type clipboard contents (raw paste)
   ESC           → Stop typing immediately
   Ctrl+Shift+B  → Pause/Resume
+  Ctrl+Shift+Q  → Quit
+
+Windows:
+  Ctrl+Shift+B  → Type clipboard contents (raw paste)
+  ESC           → Stop typing immediately
+  Ctrl+Shift+H  → Pause/Resume
   Ctrl+Shift+Q  → Quit
 
 Platform Support:
@@ -17,6 +25,7 @@ Platform Support:
   - macOS 10.13+
 
 Note: On macOS, we use Ctrl (not Cmd) to avoid conflicts with system paste.
+      On Windows, we use different keys to avoid conflicting with Windows' Ctrl+Shift+V.
 
 Options (edit below):
   - TYPING_DELAY: seconds between each keystroke (lower = faster)
@@ -216,6 +225,16 @@ def quit_program(icon=None, item=None):
 # Windows virtual key codes (same as ASCII uppercase)
 VK_MAP_MACOS = {9: 'v', 11: 'b', 12: 'q'}
 
+# Platform-specific hotkey assignments
+if IS_WINDOWS:
+    HOTKEY_PASTE = 'b'
+    HOTKEY_TOGGLE = 'h'
+    HOTKEY_QUIT = 'q'
+else:
+    HOTKEY_PASTE = 'v'
+    HOTKEY_TOGGLE = 'b'
+    HOTKEY_QUIT = 'q'
+
 
 def get_key_char(key):
     """Get the letter for a key press, even when modifiers change key.char."""
@@ -269,13 +288,13 @@ def on_press(key):
             char = get_key_char(key)
             logging.debug(f"Ctrl+Shift detected, resolved char={char}")
 
-            if char == 'v':
+            if char == HOTKEY_PASTE:
                 logging.info("Hotkey triggered: paste")
                 threading.Thread(target=type_clipboard, daemon=True).start()
-            elif char == 'b':
+            elif char == HOTKEY_TOGGLE:
                 logging.info("Hotkey triggered: toggle")
                 toggle_enabled()
-            elif char == 'q':
+            elif char == HOTKEY_QUIT:
                 logging.info("Hotkey triggered: quit")
                 quit_program()
 
