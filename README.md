@@ -1,6 +1,6 @@
 # Clipboard Typer - Raw Paste Tool
 
-A cross-platform utility that types out your clipboard contents character-by-character, simulating keyboard input. I originally built this for remote desktop sessions where Ctrl+V kept getting blocked — so this tool simulates real typing instead.
+A cross-platform utility that types out your clipboard contents character-by-character, simulating keyboard input. I originally built this for remote desktop sessions where Ctrl+V kept getting blocked — so this tool simulates real typing instead. DEMO in "Tag"!
 
 Runs silently in the background with a **menu bar icon** (macOS) or **system tray icon** (Windows) — no terminal window required.
 
